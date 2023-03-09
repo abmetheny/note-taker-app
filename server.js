@@ -1,6 +1,9 @@
 const express = require('express');
 const path = require('path');
-const db = require('./db.json')
+const fs = require('fs');
+const {v4} = require('uuid');
+let db = require('./db/db.json');
+
 
 const app = express();
 const PORT = 3001;
@@ -37,9 +40,17 @@ app.post('/api/notes', (req, res) => {
         const newNote = {
           title,
           text,
-          id: uuid(),
+          id: v4(),
         };
-    
+        
+        db.push(newNote);
+
+        fs.writeFile('./db/db.json', JSON.stringify(db), (err) => {
+            if (err) {
+                console.log(err);
+            }
+        });
+
         const response = {
           status: 'success',
           body: newNote,
