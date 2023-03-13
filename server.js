@@ -24,13 +24,13 @@ app.get('/notes', (req, res) => {
     res.sendFile(path.join(__dirname, '/public/notes.html'))
 });
 
-// API route to get notes from db.json file
+// Middleware route to get notes from db.json file
 app.get('/api/notes', (req, res) => {
     console.info(`GET /api/notes`);
     res.status(200).json(db);
 });
 
-// API route to post notes to db.json file
+// Middleware route to post notes to db.json file
 app.post('/api/notes', (req, res) => {
     console.info(`${req.method} request received to add a note`);
 
@@ -63,7 +63,30 @@ app.post('/api/notes', (req, res) => {
     }
 });
 
+// Middleware route to delete notes from db.json file
+app.delete('/api/notes/:id', (req, res) => {
+    if (req.params.id) {
+        console.info(`${req.method} request received to delete a note`);
+        let filtered = db.filter(note => {
+            return note.id != req.params.id;
+        });
+        console.log(filtered);
 
+        
+
+        fs.writeFile('./db/db.json', JSON.stringify(filtered), (err) => {
+            if (err) {
+                console.log(err);
+            }
+            res.status(201).json(filtered);
+        
+            readFromFile('./db/db.json').then((data) =>
+                res.json(JSON.parse(data)));
+        });
+
+    }
+
+});
 
 
 
