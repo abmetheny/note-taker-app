@@ -81,6 +81,7 @@ app.delete('/api/notes/:id', (req, res) => {
                 console.log(err);
             }
             // res.status(201).json(filtered);
+            db = filtered;
         
             // Reads the new db.json file so that the newly filtered list will be displayed on the page
             readFromFile('./db/db.json').then((data) =>
