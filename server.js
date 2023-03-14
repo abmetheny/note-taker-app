@@ -4,7 +4,6 @@ const fs = require('fs');
 const {v4} = require('uuid');
 let db = require('./db/db.json');
 
-
 const app = express();
 const PORT = 3001;
 
@@ -61,25 +60,27 @@ app.post('/api/notes', (req, res) => {
     } else {
         res.status(500).json('Error in posting note');
     }
+
 });
 
 // Middleware route to delete notes from db.json file
 app.delete('/api/notes/:id', (req, res) => {
     if (req.params.id) {
         console.info(`${req.method} request received to delete a note`);
+        // Returns the json db array, filtering out the object with the selected id parameter
         let filtered = db.filter(note => {
             return note.id != req.params.id;
         });
-        console.log(filtered);
+        console.log(filtered);       
 
-        
-
+        // Overwrites old db.json file with the new filtered json array
         fs.writeFile('./db/db.json', JSON.stringify(filtered), (err) => {
             if (err) {
                 console.log(err);
             }
             res.status(201).json(filtered);
         
+            // Reads the new db.json file so that the newly filtered list will be displayed on the page
             readFromFile('./db/db.json').then((data) =>
                 res.json(JSON.parse(data)));
         });
@@ -88,8 +89,6 @@ app.delete('/api/notes/:id', (req, res) => {
 
 });
 
-
-
-app.listen(PORT, () =>
-    console.log(`Notes app listening at http://localhost:${PORT}`)
+app.listen(process.env.PORT || PORT, () =>
+    console.log(`Notes app listening at ${process.env.PORT} or ${PORT}`)
 );
