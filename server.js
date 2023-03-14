@@ -28,6 +28,7 @@ app.get('/notes', (req, res) => {
 // Middleware route to get notes from db.json file
 app.get('/api/notes', (req, res) => {
     console.info(`GET /api/notes`);
+    //include read and write instead of referencing/using db directly
     res.status(200).json(db);
 });
 
