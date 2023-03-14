@@ -90,5 +90,5 @@ app.delete('/api/notes/:id', (req, res) => {
 });
 
 app.listen(process.env.PORT || PORT, () =>
-    console.log(`Notes app listening at ${process.env.PORT} or ${PORT}`)
+    console.log(`Notes app listening at PORT.`)
 );
