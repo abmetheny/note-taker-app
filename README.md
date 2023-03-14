@@ -24,7 +24,10 @@ THEN I am presented with empty fields to enter a new note title and the note’s
 ## Description of Work Performed
 * Imported Express package to create back end functionality for provided front end files
 * Wrote back end functions and middleware to allow communication between client and server
-* Notes can be added/saved and deleted from the app and the interface updates dynamically
+* Notes can be added/saved and deleted from the app
+  * Newly saved notes are assigned a UUID and stored in the db.json file
+  * Saved notes can be deleted by clicking on the delete icon
+  * Page is dynamically updated when notes are saved or deleted
 * Application has been deployed to Heroku
 
 ## Link to deployed Heroku page
