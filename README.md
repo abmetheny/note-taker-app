@@ -30,7 +30,6 @@ THEN I am presented with empty fields to enter a new note title and the note’s
 ## Link to deployed Heroku page
 [Deployed Challenge 11 Note Taker App](https://fierce-fjord-08413.herokuapp.com/)
 
-
 ## Screenshots
 <img src="./assets/images/Screenshot1.png">
 <img src="./assets/images/Screenshot2.png">

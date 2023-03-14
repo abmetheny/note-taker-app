@@ -15,12 +15,12 @@ app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-// A get request that will return the content of the notes.html file
+// A get request for the main page that will return the content of the index.html file
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '/public/index.html'))
 });
 
-// A get request that will return the content of the notes.html file
+// A get request for the /notes path that will return the content of the notes.html file
 app.get('/notes', (req, res) => {
     res.sendFile(path.join(__dirname, '/public/notes.html'))
 });
@@ -28,8 +28,11 @@ app.get('/notes', (req, res) => {
 // Middleware route to get notes from db.json file
 app.get('/api/notes', (req, res) => {
     console.info(`GET /api/notes`);
-    //include read and write instead of referencing/using db directly
-    res.status(200).json(db);
+
+    readFromFile('./db/db.json').then((data) =>
+        res.json(JSON.parse(data))
+    );
+
 });
 
 // Middleware route to post notes to db.json file
@@ -45,8 +48,10 @@ app.post('/api/notes', (req, res) => {
           id: v4(),
         };
         
+        // Pushes newly created note to db variable
         db.push(newNote);
 
+        // Overwrites the existing db.json file with updated db variable array
         fs.writeFile('./db/db.json', JSON.stringify(db), (err) => {
             if (err) {
                 console.log(err);
@@ -70,23 +75,26 @@ app.post('/api/notes', (req, res) => {
 app.delete('/api/notes/:id', (req, res) => {
     if (req.params.id) {
         console.info(`${req.method} request received to delete a note`);
+
         // Returns the json db array, filtering out the object with the selected id parameter
         let filtered = db.filter(note => {
             return note.id != req.params.id;
         });
-        console.log(filtered);       
+
+        // Sets db variable to the newly filtered array
+        db = filtered;
 
         // Overwrites old db.json file with the new filtered json array
-        fs.writeFile('./db/db.json', JSON.stringify(filtered), (err) => {
+        fs.writeFile('./db/db.json', JSON.stringify(db), (err) => {
             if (err) {
                 console.log(err);
             }
-            // res.status(201).json(filtered);
-            db = filtered;
         
-            // Reads the new db.json file so that the newly filtered list will be displayed on the page
+            // Reads the new db.json file so that the newly filtered set of objects will be displayed on the page
             readFromFile('./db/db.json').then((data) =>
-                res.json(JSON.parse(data)));
+                res.json(JSON.parse(data))
+            );
+
         });
 
     }
